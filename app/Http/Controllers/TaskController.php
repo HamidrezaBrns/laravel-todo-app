@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -83,5 +82,12 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully!');
+    }
+
+    public function toggleComplete(Task $task): RedirectResponse
+    {
+        $task->toggleComplete();
+
+        return redirect()->back();
     }
 }
