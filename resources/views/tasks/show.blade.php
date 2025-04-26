@@ -1,17 +1,8 @@
 @extends('layouts.master')
 
-@section('heading')
-    <p class="flex gap-1 items-center">
-        <img src="{{ asset('/images/icons8-task-30.png') }}" class="size-6" alt="task"/>
-        <span>{{ $task->title }}</span>
-    </p>
-@endsection
+@section('heading', $task->title)
 
 @section('content')
-    <div class="mb-4">
-        <a href="/tasks" class="underline text-blue-500">Back to the list</a>
-    </div>
-
     <div @class(["flex items-center justify-between gap-2 border-l-4 mb-4 py-1 px-2",
                      "bg-yellow-300/60 border-yellow-500" => !$task->completed,
                      "bg-green-300/60 border-green-500" => $task->completed])>
@@ -28,9 +19,14 @@
             @endif
         </div>
 
-        <button form="form-toggle-complete" class="cursor-pointer text-sm text-slate-600 font-semibold hover:underline">
+        <button form="form-toggle-complete"
+                class="cursor-pointer text-sm text-slate-600 font-semibold hover:underline">
             Mark as {{ $task->completed ? 'Not Completed': 'Completed' }}
         </button>
+    </div>
+
+    <div class="mb-4">
+        <a href="/tasks" class="underline text-blue-500">Back to the list</a>
     </div>
 
     <p class="mb-4">{{ $task->description }}</p>
@@ -48,12 +44,11 @@
             @method('PATCH')
         </form>
 
-        <a href="/tasks/{{ $task->id }}/edit" class="btn-simple">Edit</a>
+        <a href="{{ route('tasks.edit', $task) }}" class="btn-simple">Edit</a>
 
         <form method="post">
             @csrf
             @method('DELETE')
-
             <button class="btn-delete">Delete</button>
         </form>
     </div>

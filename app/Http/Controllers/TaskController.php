@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -14,7 +15,7 @@ class TaskController extends Controller
      */
     public function index(): View
     {
-        $tasks = Task::latest()->paginate(6);
+        $tasks = Auth::user()->tasks()->latest()->paginate(5);
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -34,9 +35,9 @@ class TaskController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['user_id'] = 1;
+        $validated['user_id'] = Auth::user()->id;
 
-        Task::create($validated);
+        Auth::user()->tasks()->create($validated);
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task created successfully.');
@@ -63,11 +64,11 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
-        $attributes = $request->validated();
+        $validated = $request->validated();
 
-        $attributes['user_id'] = 1;
+        $validated['user_id'] = Auth::user()->id;
 
-        $task->update($attributes);
+        $task->update($validated);
 
         return redirect()->route('tasks.show', $task)
             ->with('success', 'Task updated successfully.');

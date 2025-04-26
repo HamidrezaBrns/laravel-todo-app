@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('heading', 'Todo List')
+@section('heading', 'List of Tasks')
 
 @section('content')
     <div>
