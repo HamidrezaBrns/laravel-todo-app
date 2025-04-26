@@ -13,7 +13,7 @@
 
 }
 
-label {
+.input-label {
     @apply block mb-1 uppercase text-slate-700 text-sm font-bold
 }
 

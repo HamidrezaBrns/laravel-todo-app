@@ -28,7 +28,7 @@
                            class="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Tasks
                         </a>
-                        <a href=""
+                        <a href="{{ route('categories.index') }}"
                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Categories
                         </a>
@@ -46,7 +46,7 @@
                                         @method('DELETE')
 
                                         <button
-                                            class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center cursor-pointer">
+                                                class="text-gray-500 hover:text-gray-700 text-sm font-medium flex items-center cursor-pointer">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
                                                  viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

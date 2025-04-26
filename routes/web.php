@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\TaskController;
 use App\Models\Task;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('tasks.index');
 });
+
+Route::resource('categories', CategoryController::class);
 
 Route::controller(TaskController::class)->group(function () {
     Route::get('/tasks', 'index')->name('tasks.index');
@@ -38,7 +41,7 @@ Route::controller(RegisteredUserController::class)->group(function () {
         ->name('register');
 
     Route::post('/register', 'store');
-})->middleware('auth');
+})->middleware('guest');
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
     Route::get('/login', 'create')

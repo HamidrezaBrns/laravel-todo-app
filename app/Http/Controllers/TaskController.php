@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -15,7 +15,7 @@ class TaskController extends Controller
      */
     public function index(): View
     {
-        $tasks = Auth::user()->tasks()->latest()->paginate(5);
+        $tasks = Auth::user()->tasks()->with('categories')->latest()->paginate(5);
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -25,19 +25,34 @@ class TaskController extends Controller
      */
     public function create(): View
     {
-        return view('tasks.create');
+        $categories = Auth::user()->categories;
+
+        return view('tasks.create', ['categories' => $categories]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $request->validate([
+            'title' => ['required', 'min:3'],
+            'description' => ['required'],
+            'categories' => ['sometimes', 'array'],
+            'categories.*' => ['exists:categories,id,user_id,' . auth()->id()]
+        ]);
 
-        $validated['user_id'] = Auth::user()->id;
+        $task = Auth::user()->tasks()->create([
+            'user_id' => Auth::user()->id,
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
 
-        Auth::user()->tasks()->create($validated);
+        if ($request->has('categories')) {
+            $task->categories()->sync($request->categories);
+        } else {
+            $task->categories()->detach();
+        }
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task created successfully.');
@@ -56,19 +71,36 @@ class TaskController extends Controller
      */
     public function edit(Task $task): View
     {
-        return view('tasks.edit', ['task' => $task]);
+        $categories = Auth::user()->categories;
+
+        return view('tasks.edit', [
+            'task' => $task,
+            'categories' => $categories
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaskRequest $request, Task $task): RedirectResponse
+    public function update(Request $request, Task $task): RedirectResponse
     {
-        $validated = $request->validated();
+        $request->validate([
+            'title' => ['required', 'min:3'],
+            'description' => ['required'],
+            'categories' => ['sometimes', 'array'],
+            'categories.*' => ['exists:categories,id,user_id,' . auth()->id()]
+        ]);
 
-        $validated['user_id'] = Auth::user()->id;
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description
+        ]);
 
-        $task->update($validated);
+        if ($request->has('categories')) {
+            $task->categories()->sync($request->categories);
+        } else {
+            $task->categories()->detach();
+        }
 
         return redirect()->route('tasks.show', $task)
             ->with('success', 'Task updated successfully.');

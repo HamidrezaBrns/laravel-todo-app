@@ -5,11 +5,22 @@
 @section('content')
     <div>
         @foreach($tasks as $task)
-            <div class="py-3 border-b border-gray-300">
+            <div class="flex justify-between items-center py-3 border-b border-gray-300">
                 <a href="{{ route('tasks.show', $task) }}"
                     @class(['hover:underline', 'text-slate-500/70 line-through' => $task->completed])>
                     {{ $task->title }}
                 </a>
+
+                <div class="space-x-1">
+                    @forelse($task->categories as $category)
+                        <a href="" class="px-2 py-1 bg-slate-300 hover:bg-slate-200 rounded-xl text-slate-800 transition-colors duration-300">
+                            {{ $category->name }}
+                        </a>
+                    @empty
+
+                    @endforelse
+                </div>
+
             </div>
         @endforeach
 
