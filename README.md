@@ -44,3 +44,8 @@ npm run dev
 
 # Start development server
 php artisan serve
+
+## 📌 
+
+- [ ] Notifications system 
+- [ ] Calendar 
