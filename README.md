@@ -45,7 +45,7 @@ npm run dev
 # Start development server
 php artisan serve
 
-## 📌 
+## 📌 Latet features 
 
-- [ ] Notifications system 
-- [ ] Calendar 
+- Notification system 
+- Calendar 
