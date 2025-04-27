@@ -46,7 +46,7 @@
                         type="checkbox"
                         name="categories[]"
                         value="{{ $category->id }}"
-                        @checked(in_array($category->id, old('categories', isset($task) ? $task->categories->pluck('id')->toArray(): [])))
+                        @checked(in_array($category->id, old('categories', isset($task) ? $task->categories->pluck('id')->toArray() : [])))
                     /> {{ $category->name }}
                 </label>
             @endforeach

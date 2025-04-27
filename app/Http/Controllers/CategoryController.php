@@ -22,9 +22,9 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -32,7 +32,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => ['exists:users'],
+            'name' => ['required'],
+        ]);
+
+        Auth::user()->categories()->create($validated);
+
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -40,7 +47,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return view('categories.show', ['category' => $category]);
     }
 
     /**

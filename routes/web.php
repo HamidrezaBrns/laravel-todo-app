@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::resource('categories', CategoryController::class);
 
-Route::controller(TaskController::class)->group(function () {
+Route::controller(TaskController::class)->middleware('auth')->group(function () {
     Route::get('/tasks', 'index')->name('tasks.index');
 
     Route::post('/tasks', 'store')->name('tasks.store');
@@ -34,25 +34,22 @@ Route::controller(TaskController::class)->group(function () {
 
     Route::patch('/tasks/{task}', 'toggleComplete')->name('tasks.toggle-complete')
         ->can('edit', 'task');
-})->middleware('auth');
+});
 
 Route::controller(RegisteredUserController::class)->group(function () {
-    Route::get('/register', 'create')
-        ->name('register');
+    Route::get('/register', 'create')->name('register');
 
     Route::post('/register', 'store');
 })->middleware('guest');
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
-    Route::get('/login', 'create')
-        ->name('login')
+    Route::get('/login', 'create')->name('login')
         ->middleware('guest');
 
     Route::post('/login', 'store')
         ->middleware('guest');
 
-    Route::delete('/logout', 'destroy')
-        ->name('logout')
+    Route::delete('/logout', 'destroy')->name('logout')
         ->middleware('auth');
 });
 

@@ -3,6 +3,14 @@
 @section('heading', $task->title)
 
 @section('content')
+    <div class="flex items-center gap-1 mb-4">
+        @foreach($task->categories as $category)
+            <x-category-tag href="{{ route('categories.show', $category) }}">
+                {{ $category->name }}
+            </x-category-tag>
+        @endforeach
+    </div>
+
     <div @class(["flex items-center justify-between gap-2 border-l-4 mb-4 py-1 px-2",
                      "bg-yellow-300/60 border-yellow-500" => !$task->completed,
                      "bg-green-300/60 border-green-500" => $task->completed])>
@@ -19,10 +27,12 @@
             @endif
         </div>
 
-        <button form="form-toggle-complete"
-                class="cursor-pointer text-sm text-slate-600 font-semibold hover:underline">
-            Mark as {{ $task->completed ? 'Not Completed': 'Completed' }}
-        </button>
+        @can('edit', $task)
+            <button form="form-toggle-complete"
+                    class="cursor-pointer text-sm text-slate-600 font-semibold hover:underline">
+                Mark as {{ $task->completed ? 'Not Completed': 'Completed' }}
+            </button>
+        @endcan
     </div>
 
     <div class="mb-4">
@@ -38,19 +48,21 @@
         <li>updated {{ $task->updated_at->diffForHumans() }}</li>
     </ul>
 
-    <div class="flex items-center gap-2 mt-10">
-        <form id="form-toggle-complete" method="post" action="">
-            @csrf
-            @method('PATCH')
-        </form>
+    @can('edit', $task)
+        <div class="flex items-center gap-2 mt-10">
+            <form id="form-toggle-complete" method="post" action="">
+                @csrf
+                @method('PATCH')
+            </form>
 
-        <a href="{{ route('tasks.edit', $task) }}" class="btn-simple">Edit</a>
+            <a href="{{ route('tasks.edit', $task) }}" class="btn-simple">Edit</a>
 
-        <form method="post">
-            @csrf
-            @method('DELETE')
-            <button class="btn-delete">Delete</button>
-        </form>
-    </div>
+            <form method="post">
+                @csrf
+                @method('DELETE')
+                <button class="btn-delete">Delete</button>
+            </form>
+        </div>
+    @endcan
 
 @endsection
