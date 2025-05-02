@@ -15,6 +15,7 @@
                 id="title"
                 name="title"
                 value="{{ $task->title ?? old('title') }}"
+                autofocus
                 placeholder="Work..."
             />
 

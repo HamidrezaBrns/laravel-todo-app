@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,14 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $tasks = Auth::user()->tasks()->with('categories')->latest()->paginate(5);
+        $tasks = Auth::user()
+            ->tasks()
+            ->with('categories')
+            ->when($request->q, fn(Builder $query) => $query->where('title', 'LIKE', "%$request->q%"))
+            ->latest()
+            ->get();
 
         return view('tasks.index', ['tasks' => $tasks]);
     }

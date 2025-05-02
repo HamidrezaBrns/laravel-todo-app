@@ -3,33 +3,30 @@
 @section('heading', 'List of Tasks')
 
 @section('content')
+    <form class="flex items-center gap-2 mb-4">
+        <input type="text"
+               name="q"
+               class="shadow-sm border w-full py-2 px-3 text-slate-700 leading-tight focus:outline-none rounded border-slate-300 h-10"
+               value="{{ request('q') }}"
+               placeholder="Search by title..."
+        />
+
+        <button
+            class="cursor-pointer bg-white rounded px-4 py-2 text-center font-medium text-slate-500 shadow-sm ring-1 ring-slate-700/10 hover:bg-slate-50 h-10">
+            Search
+        </button>
+        <a href="/" class="btn-simple h-10">
+            Clear
+        </a>
+    </form>
+
     <div>
         @foreach($tasks as $task)
-            <div class="flex justify-between items-center py-3 border-b border-gray-300">
-                <a href="{{ route('tasks.show', $task) }}"
-                    @class(['hover:underline', 'text-slate-500/70 line-through' => $task->completed])>
-                    {{ $task->title }}
-                </a>
-
-                <div class="flex items-center gap-1">
-                    @foreach($task->categories as $category)
-                        <x-category-tag href="{{ route('categories.show', $category) }}">
-                            {{ $category->name }}
-                        </x-category-tag>
-                    @endforeach
-                </div>
-            </div>
+            <x-task-card :$task/>
         @endforeach
 
-        <div class="flex justify-center py-3 text-slate-500">
-            <a href="{{ route('tasks.create') }}" class="flex items-center gap-1">
-                <img src="{{ asset('/images/icons8-plus-24.png') }}" alt="add-task" class="size-4">
-                <span>Add Task</span>
-            </a>
+        <div class="flex justify-center py-3">
+            <x-add-link href="{{ route('tasks.create') }}">Add Task</x-add-link>
         </div>
-    </div>
-
-    <div class="mt-10">
-        {{ $tasks->links() }}
     </div>
 @endsection
