@@ -1,16 +1,16 @@
 # Laravel Todo Application
 
 A simple task management application built with Laravel and Tailwind CSS featuring:
-- ✨ User authentication system
-- 📝 CRUD operations for tasks
-- 🏷️ Category system (in development)
+- User authentication system
+- CRUD operations for tasks
+- Category system (in development)
 
-## 🛠️ Technologies Used
+##  Technologies Used
 - Laravel 12
 - Tailwind CSS 4
 - Sqlite
 
-## 🚀 Installation
+## Installation
 ```bash
 # Clone the repository
 git clone https://github.com/HamidrezaBrns/laravel-todo-app.git
@@ -41,6 +41,6 @@ php artisan serve
 ```
 - Then register a user
 
-## 📌 Upcomming features 
+## Upcoming features 
 - Notification system 
 - Calendar 
