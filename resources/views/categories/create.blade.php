@@ -14,6 +14,7 @@
                 id="name"
                 name="name"
                 value="{{ old('name') }}"
+                autofocus
                 placeholder="Category Name"
             />
 
