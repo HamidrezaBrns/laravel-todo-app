@@ -11,30 +11,13 @@ Route::get('/', function () {
 });
 
 Route::resource('categories', CategoryController::class)
-    ->except(['edit', 'update']);
+    ->except(['edit', 'update'])
+    ->middleware('auth');
 
-Route::controller(TaskController::class)->middleware('auth')->group(function () {
-    Route::get('/tasks', 'index')->name('tasks.index');
-
-    Route::post('/tasks', 'store')->name('tasks.store');
-
-    Route::get('/tasks/create', 'create')->name('tasks.create');
-
-    Route::get('/tasks/{task}', 'show')->name('tasks.show')
-        ->can('view', 'task');
-
-    Route::put('/tasks/{task}', 'update')->name('tasks.update')
-        ->can('edit', 'task');
-
-    Route::delete('/tasks/{task}', 'destroy')->name('tasks.destroy')
-        ->can('edit', 'task');
-
-    Route::get('/tasks/{task}/edit', 'edit')->name('tasks.edit')
-        ->can('edit', 'task');
-
-    Route::patch('/tasks/{task}', 'toggleComplete')->name('tasks.toggle-complete')
-        ->can('edit', 'task');
-});
+Route::resource('tasks', TaskController::class)
+    ->middleware('auth');
+Route::patch('/tasks/{task}', [TaskController::class, 'toggleComplete'])
+    ->middleware('auth');
 
 Route::controller(RegisteredUserController::class)->group(function () {
     Route::get('/register', 'create')->name('register');
