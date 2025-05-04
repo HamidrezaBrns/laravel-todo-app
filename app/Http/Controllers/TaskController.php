@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -16,6 +17,8 @@ class TaskController extends Controller
      */
     public function index(Request $request): View
     {
+        Gate::authorize('view-any', Task::class);
+
         $tasks = Auth::user()
             ->tasks()
             ->with('categories')
@@ -31,6 +34,8 @@ class TaskController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('create', Task::class);
+
         $categories = Auth::user()->categories;
 
         return view('tasks.create', ['categories' => $categories]);
@@ -41,6 +46,8 @@ class TaskController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('create', Task::class);
+
         $request->validate([
             'title' => ['required', 'min:3'],
             'description' => ['required'],
@@ -69,6 +76,8 @@ class TaskController extends Controller
      */
     public function show(Task $task): View
     {
+        Gate::authorize('view', $task);
+
         return view('tasks.show', ['task' => $task]);
     }
 
@@ -77,6 +86,8 @@ class TaskController extends Controller
      */
     public function edit(Task $task): View
     {
+        Gate::authorize('update', $task);
+
         $categories = Auth::user()->categories;
 
         return view('tasks.edit', [
@@ -90,6 +101,8 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task): RedirectResponse
     {
+        Gate::authorize('update', $task);
+
         $request->validate([
             'title' => ['required', 'min:3'],
             'description' => ['required'],
@@ -117,6 +130,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task): RedirectResponse
     {
+        Gate::authorize('delete', $task);
+
         $task->delete();
 
         return redirect()->route('tasks.index')
@@ -125,6 +140,8 @@ class TaskController extends Controller
 
     public function toggleComplete(Task $task): RedirectResponse
     {
+        Gate::authorize('update', $task);
+
         $task->toggleComplete();
 
         return redirect()->back();

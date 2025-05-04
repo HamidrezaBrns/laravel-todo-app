@@ -13,7 +13,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $task->user()->is($user);
+        return $user->id === $task->user_id;
     }
 
     /**
@@ -29,15 +29,15 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
-     * Determine whether the user can edit the model.
+     * Determine whether the user can update the model.
      */
-    public function edit(User $user, Task $task): bool
+    public function update(User $user, Task $task): bool
     {
-        return $task->user()->is($user);
+        return $user->id === $task->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return false;
+        return $user->id === $task->user_id;
     }
 
     /**

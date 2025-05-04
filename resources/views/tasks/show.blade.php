@@ -27,7 +27,7 @@
             @endif
         </div>
 
-        @can('edit', $task)
+        @can('update', $task)
             <button form="form-toggle-complete"
                     class="cursor-pointer text-sm text-slate-600 font-semibold hover:underline">
                 Mark as {{ $task->completed ? 'Not Completed': 'Completed' }}
@@ -48,21 +48,23 @@
         <li>updated {{ $task->updated_at->diffForHumans() }}</li>
     </ul>
 
-    @can('edit', $task)
-        <div class="flex items-center gap-2 mt-10">
+    <div class="flex items-center gap-2 mt-10">
+        @can('update', $task)
             <form id="form-toggle-complete" method="post" action="">
                 @csrf
                 @method('PATCH')
             </form>
 
             <a href="{{ route('tasks.edit', $task) }}" class="btn-simple">Edit</a>
+        @endcan
 
+        @can('delete', $task)
             <form method="post">
                 @csrf
                 @method('DELETE')
                 <button class="btn-delete">Delete</button>
             </form>
-        </div>
-    @endcan
+        @endcan
+    </div>
 
 @endsection
