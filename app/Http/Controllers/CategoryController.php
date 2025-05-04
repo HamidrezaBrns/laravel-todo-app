@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Task;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -16,6 +15,8 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
+        Gate::authorize('view-any', Category::class);
+
         $categories = Auth::user()->categories;
 
         return view('categories.index', ['categories' => $categories]);
@@ -26,6 +27,8 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
+        Gate::authorize('create', Category::class);
+
         return view('categories.create');
     }
 
@@ -34,6 +37,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create', Category::class);
+
         $validated = $request->validate([
             'user_id' => ['exists:users'],
             'name' => ['required'],
@@ -49,6 +54,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        Gate::authorize('view', $category);
+
         $category = $category->load([
             'tasks' => fn($query) => $query->with('categories')
         ]);
@@ -63,6 +70,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        Gate::authorize('delete', $category);
+
         $category->delete();
 
         return redirect()->back();
